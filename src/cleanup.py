@@ -7,6 +7,7 @@ from sklearn.cross_validation import train_test_split, cross_val_score
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.linear_model import LinearRegression
 from pandas_summary import DataFrameSummary
+from pandas.tools.plotting import scatter_matrix
 
 
 def load_data(filename):
@@ -51,10 +52,6 @@ def load_data(filename):
         df['MachineHoursCurrentMeter'].values)].reset_index(drop=True)
     return df_out, df_year_missing, df_machineHour_missing
 
-#df_train = df
-#column_to_fill = 'MachineHoursCurrentMeter'
-#df_with_missing_data = df_machineHour_missing
-
 
 def missing_data_imputation(df_train, df_with_missing_data, column_to_fill, predictors=['YearMade', 'SalePrice']):
     '''
@@ -79,11 +76,12 @@ def missing_data_imputation(df_train, df_with_missing_data, column_to_fill, pred
     return df_out
 
 
-if __main__ == '__name__':
+if __name__ == '__main__':
     # Don't add the extension to the filename as it will extract zip to csv
     filename = '../data/Train'
     df, df_year_missing, df_machineHour_missing = load_data(filename)
     # fill missing hours data
     df_hours = missing_data_imputation(
-        df_train, df_machineHour_missing, column_to_fill='MachineHoursCurrentMeter', predictors=['YearMade', 'SalePrice'])
+        df, df_machineHour_missing, column_to_fill='MachineHoursCurrentMeter', predictors=['YearMade', 'SalePrice'])
+    # final date with prediction of the hours
     df_final = pd.merge(df, df_hours)
